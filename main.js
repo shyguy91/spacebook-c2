@@ -57,6 +57,10 @@ function renderPosts() {
         }  
         console.log('error');     
     });
+
+    $('.post').click(function(){
+        
+    });
 }
 
 $('.add-post').click(function() {
