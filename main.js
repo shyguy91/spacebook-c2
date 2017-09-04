@@ -54,6 +54,13 @@ var SpacebookApp = function () {
             $posts.append('<div class="post" data-id=' + post.id + '>'
                 + '<a href="#" class="remove">remove</a> ' + '<a href="#" class="show-comments">comments</a> ' + post.text +
                 commentsContainer + '</div>');
+            //  // Alternate event handler code for post comment button
+                // $('.add-comment').off();
+                // $('.add-comment').click(function(){
+                //     var commentText = $(this).prev('.comment-name').val();
+                //     createComment(this, commentText);
+                //     renderComments(this);
+                // });
         }
     }
 
@@ -145,6 +152,8 @@ $('.add-post').on('click', function () {
 
     app.createPost(text);
     app.renderPosts();
+    postCommentButton = $(this).closest('form').prev('.posts').find('.add-comment');
+    app.renderComments(postCommentButton);
 });
 
 $('.posts').on('click', '.remove', function () {
