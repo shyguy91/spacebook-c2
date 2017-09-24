@@ -14,11 +14,30 @@ app.use(express.static('node_modules'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// // Created some dummy data //
+// var dummyPost = new Post({
+//   text: 'hello'
+// });
+// var dummyComment = {
+//   text: 'bye',
+//   user: 'Bob'
+// };
+// dummyPost.comments.push(dummyComment);
+// dummyPost.save();
 
 // You will need to create 5 server routes
 // These will define your API:
 
 // 1) to handle getting all posts and their comments
+app.get('/posts', function(request, response) {
+  // var postsArray = 
+  Post.find({}, function(err, res){
+    if (err) {return console.log(err)}
+    response.send(res);
+  }
+);
+  //response.send(postsArray);
+});
 // 2) to handle adding a post
 // 3) to handle deleting a post
 // 4) to handle adding a comment to a post
