@@ -6,18 +6,29 @@ var SpacebookApp = function() {
 
   _getPosts();
 
-  _renderPosts();
-
-
   function _getPosts() {
     $.get({
       url: '/posts',
       dataType: "json",
       success: function(data) {
-        //console.log(data);
         data.forEach(function(element) {
-          addPost(element.text, element._id);
+          posts.push({ text: element.text, comments: [], id: element._id });
         }, this);
+        _renderPosts();        
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+      }
+    });
+  }
+
+  function _postPosts(postObj) {
+    $.post({
+      url: '/posts',
+      dataType: "json",      
+      data: postObj,
+      success: function(data) {
+        postObj.id = data._id
       },
       error: function(jqXHR, textStatus, errorThrown) {
         console.log(textStatus);
@@ -37,8 +48,10 @@ var SpacebookApp = function() {
     }
   }
 
-  function addPost(newPost, newPostID) {
-    posts.push({ text: newPost, comments: [], id: newPostID });
+  function addPost(newPost) {
+    var newPostObj = { text: newPost, comments: [] };
+    _postPosts(newPostObj);
+    posts.push(newPostObj);
     _renderPosts();
   }
 
@@ -56,8 +69,19 @@ var SpacebookApp = function() {
   }
 
   var removePost = function(index) {
-    posts.splice(index, 1);
-    _renderPosts();
+    $.ajax({
+      url: '/posts/' + $('.post').eq(index).data("id"), // posts[index].id
+      method: 'DELETE',
+      success: function(data) {
+        console.log(data);
+        console.log();
+        posts.splice(index, 1);
+        _renderPosts();
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+      }
+    });
   };
 
   var addComment = function(newComment, postIndex) {
@@ -95,7 +119,8 @@ $('#addpost').on('click', function() {
 var $posts = $(".posts");
 
 $posts.on('click', '.remove-post', function() {
-  var index = $(this).closest('.post').index();;
+  var index = $(this).closest('.post').index();
+  console.log(index);
   app.removePost(index);
 });
 
